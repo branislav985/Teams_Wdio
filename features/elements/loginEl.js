@@ -10,6 +10,9 @@ export default class LoginPageSelectors{
     REMEMBER_CHECKBOX = $('remember')
     LOGIN_BUTTON = $('button[data-testid="loginButton"]')
     ERROR_LOGIN_MESSAGE = $('div[data-testid="loginErrorText"]')
+    CLICK_HERE_LINK = $('div[data-testid="loginWelcomeLink"]>a')
+    LANGUAGE_SELECTOR = $('select[data-testid="locale_selector"]')
+
     // forgot password
     FORGOT_PASSWORD = $('div[data-testid="forgotPasswordLink"] > a')
     FORGOT_PASSWORD_INPUT = $('#email')
@@ -33,6 +36,9 @@ export default class LoginPageSelectors{
     INPUT_NEW_PASSWORD = $('div[data-password-input="newPassword"]>input')
     CONFIRM_CHANGE_PASSWORD = $('button[title="Update Password"]')
     CHANGE_PASS_CONFIRM_MESSAGE = $('div[data-testid="passwordChangeStatusSuccess"]')
+
+    //Create account page
+    CREATE_ACCOUNT_TITTLE = $('h1')
 
     
     // ERROR_EMAIL_LOGIN_MESSAGE = $('#parsley-id-5')

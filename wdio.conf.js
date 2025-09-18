@@ -1,8 +1,9 @@
+// import LoginPageSelectors from "./features/elements/loginEl.js";
+// import Global from "./features/pageobjects/globalPage.js";
+
+
 process.env.admin = process.env.USERNAME_ADMIN;
 process.env.adminPass = process.env.PASSWORD_ADMIN;
-
-
-
 
 
 export const config = {
@@ -107,7 +108,7 @@ export const config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['visual'],
+    services: ['intercept'],
 
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -116,7 +117,7 @@ export const config = {
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
     framework: 'cucumber',
-    
+
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -143,18 +144,18 @@ export const config = {
                 // },
                 showPreface: false,
                 color: true,
-              },
-              
-        ],
-         ['cucumberjs-json',
+            },
 
-        // OR like this if you want to set the folder and the language
-        [ 'cucumberjs-json', {
+        ],
+        ['cucumberjs-json',
+
+            // OR like this if you want to set the folder and the language
+            ['cucumberjs-json', {
                 jsonFolder: '.tmp/new/',
                 language: 'en',
             },
-        ],]
-        ],
+            ],]
+    ],
 
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
@@ -253,7 +254,20 @@ export const config = {
      * @param {string}                   uri      path to feature file
      * @param {GherkinDocument.IFeature} feature  Cucumber feature object
      */
-    // beforeFeature: function (uri, feature) {
+    // beforeFeature: async function (uri, feature) {
+        
+    //     const loginS = new LoginPageSelectors()
+    //     const global = new Global()
+    //     console.log("Starting feature: ", feature.name)
+    //     if (!feature.name.includes("login page - all functionalities")) {
+    //             await global.open('login')
+    //             await expect(loginS.TITLE).toHaveText('Login to Bria Teams')
+    //             await global.populateInputField(loginS.EMAIL_INPUT, process.env.admin)
+    //             await global.populateInputField(loginS.PASSWORD_INPUT, process.env.adminPass)
+    //             await browser.setupInterceptor()
+    //             await global.clickOnButton(loginS.LOGIN_BUTTON)
+                
+    //     };
     // },
     /**
      *
@@ -305,7 +319,7 @@ export const config = {
      */
     // afterFeature: function (uri, feature) {
     // },
-    
+
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {string} commandName hook command name

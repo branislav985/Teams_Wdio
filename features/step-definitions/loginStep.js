@@ -150,6 +150,30 @@ Then(/^Change password message (.*) is present$/, async(text) => {
   await global.elementHasText(loginS.CHANGE_PASS_CONFIRM_MESSAGE, text)
 })
 
+When(/^I click on Click here link$/, async() => {
+  await global.clickOnButton(loginS.CLICK_HERE_LINK)
+})
+
+When(/^I am redirected on page with title (.*) and URL (.*)$/, async(title, url) => {
+    await global.elementHasText(loginS.CREATE_ACCOUNT_TITTLE, title)
+    await global.urlHasText(url)
+})
+
+Then(/^Title is (.*)$/, async(title) => {
+await global.elementHasText(loginS.TITLE, title)
+})
+
+When(/^I change the language to Espanol$/, async() => {
+await global.selectFromDropDownByAttribute(loginS.LANGUAGE_SELECTOR, 'data-testid', 'locale_option_es')
+})
+
+Then('log out by API and close all tabs', async() => {
+    await global.logOut()
+    await global.closeAllTabs()
+})
+
+
+
 
 
 

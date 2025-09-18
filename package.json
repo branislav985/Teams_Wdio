@@ -10,6 +10,7 @@
     "@wdio/spec-reporter": "^9.19.2",
     "@wdio/visual-service": "^9.0.0",
     "wdio-cucumberjs-json-reporter": "^6.0.1",
+    "wdio-intercept-service": "^4.4.1",
     "wdio-json-html-reporter": "^1.5.14",
     "wdio-wait-for": "^3.1.0"
   },
