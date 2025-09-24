@@ -1,10 +1,8 @@
 
 import { browser } from '@wdio/globals';
 import axios from 'axios'
-import teamPage from './teamPage.js';
 
 var token = '';
-const teamP = new teamPage()
 
 export default class Global {
 

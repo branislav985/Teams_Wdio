@@ -1,5 +1,5 @@
-// import LoginPageSelectors from "./features/elements/loginEl.js";
-// import Global from "./features/pageobjects/globalPage.js";
+import LoginPageSelectors from "./features/elements/loginEl.js";
+import Global from "./features/pageobjects/globalPage.js";
 
 
 process.env.admin = process.env.USERNAME_ADMIN;
@@ -254,21 +254,21 @@ export const config = {
      * @param {string}                   uri      path to feature file
      * @param {GherkinDocument.IFeature} feature  Cucumber feature object
      */
-    // beforeFeature: async function (uri, feature) {
+    beforeFeature: async function (uri, feature) {
         
-    //     const loginS = new LoginPageSelectors()
-    //     const global = new Global()
-    //     console.log("Starting feature: ", feature.name)
-    //     if (!feature.name.includes("login page - all functionalities")) {
-    //             await global.open('login')
-    //             await expect(loginS.TITLE).toHaveText('Login to Bria Teams')
-    //             await global.populateInputField(loginS.EMAIL_INPUT, process.env.admin)
-    //             await global.populateInputField(loginS.PASSWORD_INPUT, process.env.adminPass)
-    //             await browser.setupInterceptor()
-    //             await global.clickOnButton(loginS.LOGIN_BUTTON)
+        let loginS = new LoginPageSelectors()
+        let global = new Global()
+        console.log("Starting feature: ", feature.name)
+        if (!feature.name.includes("login page - all functionalities")) {
+                await global.open('login')
+                await expect(loginS.TITLE).toHaveText('Login to Bria Teams')
+                await global.populateInputField(loginS.EMAIL_INPUT, process.env.admin)
+                await global.populateInputField(loginS.PASSWORD_INPUT, process.env.adminPass)
+                await browser.setupInterceptor()
+                await global.clickOnButton(loginS.LOGIN_BUTTON)
                 
-    //     };
-    // },
+        };
+    },
     /**
      *
      * Runs before a Cucumber Scenario.
