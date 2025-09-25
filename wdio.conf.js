@@ -1,9 +1,16 @@
 import LoginPageSelectors from "./features/elements/loginEl.js";
 import Global from "./features/pageobjects/globalPage.js";
 
+// const global = new Global();
 
-process.env.admin = process.env.USERNAME_ADMIN;
-process.env.adminPass = process.env.PASSWORD_ADMIN;
+
+// USERNAME_ADMIN = process.env.USERNAME_ADMIN;
+// process.env.adminPass = process.env.PASSWORD_ADMIN;
+
+export const credentials = {
+    USERNAME_ADMIN: process.env.USERNAME_ADMIN,
+    PASSWORD_ADMIN: process.env.PASSWORD_ADMIN
+}
 
 
 export const config = {
@@ -58,7 +65,15 @@ export const config = {
     // https://saucelabs.com/platform/platform-configurator
     //
     capabilities: [{
-        browserName: 'chrome'
+        browserName: 'chrome',
+        'goog:chromeOptions': {
+            args: [
+                '--disable-web-security',
+                '--disable-features=VizDisplayCompositor',
+                '--no-sandbox',
+                '--disable-dev-shm-usage'
+            ]
+        }
     }],
 
     //
@@ -143,7 +158,7 @@ export const config = {
                 //   failed: '[FAIL]',
                 // },
                 showPreface: false,
-                color: true,
+                // color: true,
             },
 
         ],
@@ -154,7 +169,13 @@ export const config = {
                 jsonFolder: '.tmp/new/',
                 language: 'en',
             },
-            ],]
+            ],],
+        // ['junit', {
+        //     outputDir: './reports/junit',
+        //     outputFileFormat: function (options) {
+        //         return `results-${options.cid}.${options.capabilities}.xml`
+        //     }
+        // }]
     ],
 
     // If you are using Cucumber you need to specify the location of your step definitions.
@@ -255,20 +276,39 @@ export const config = {
      * @param {GherkinDocument.IFeature} feature  Cucumber feature object
      */
     beforeFeature: async function (uri, feature) {
-        
+
         let loginS = new LoginPageSelectors()
         let global = new Global()
         console.log("Starting feature: ", feature.name)
         if (!feature.name.includes("login page - all functionalities")) {
-                await global.open('login')
-                await expect(loginS.TITLE).toHaveText('Login to Bria Teams')
-                await global.populateInputField(loginS.EMAIL_INPUT, process.env.admin)
-                await global.populateInputField(loginS.PASSWORD_INPUT, process.env.adminPass)
-                await browser.setupInterceptor()
-                await global.clickOnButton(loginS.LOGIN_BUTTON)
-                
+            await global.open('login')
+            await expect(loginS.TITLE).toHaveText('Login to Bria Teams')
+            await global.populateInputField(loginS.EMAIL_INPUT, credentials.USERNAME_ADMIN)
+            await global.populateInputField(loginS.PASSWORD_INPUT, credentials.PASSWORD_ADMIN)
+            await browser.setupInterceptor()
+            await global.clickOnButton(loginS.LOGIN_BUTTON)
+
         };
     },
+
+    afterScenario: async function (world, result, context) {
+        if (result.passed) {
+            console.log(`✅ Scenario passed: ${world.pickle.name}`);
+        } else {
+            console.log(`❌ Scenario failed: ${world.pickle.name}`);
+
+            // Take screenshot on failure
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            await browser.saveScreenshot(`./screenshots/failed_${world.pickle.name}_${timestamp}.png`);
+        }
+    },
+
+    // afterTest: async function (test, context, { error, result, duration, passed, retries }) {
+    //     if (!passed) {
+    //         // Cleanup test data
+    //         await apiClient.cleanupTestData();
+    //     }
+    // }
     /**
      *
      * Runs before a Cucumber Scenario.
@@ -299,24 +339,34 @@ export const config = {
      */
     // afterStep: function (step, scenario, result, context) {
     // },
-    /**
-     *
-     * Runs after a Cucumber Scenario.
-     * @param {ITestCaseHookParameter} world            world object containing information on pickle and test step
-     * @param {object}                 result           results object containing scenario results
-     * @param {boolean}                result.passed    true if scenario has passed
-     * @param {string}                 result.error     error stack if scenario failed
-     * @param {number}                 result.duration  duration of scenario in milliseconds
-     * @param {object}                 context          Cucumber World object
-     */
-    // afterScenario: function (world, result, context) {
-    // },
-    /**
-     *
-     * Runs after a Cucumber Feature.
-     * @param {string}                   uri      path to feature file
-     * @param {GherkinDocument.IFeature} feature  Cucumber feature object
-     */
+    
+    //  *
+    //  * Runs after a Cucumber Scenario.
+    //  * @param {ITestCaseHookParameter} world            world object containing information on pickle and test step
+    //  * @param {object}                 result           results object containing scenario results
+    //  * @param {boolean}                result.passed    true if scenario has passed
+    //  * @param {string}                 result.error     error stack if scenario failed
+    //  * @param {number}                 result.duration  duration of scenario in milliseconds
+    //  * @param {object}                 context          Cucumber World object
+    
+//     afterScenario: async function (world, result, context) {
+//         if (!result.passed) {
+//     await global.takeScreenshot(`failed_${world.pickle.name.replace(/[^a-zA-Z0-9]/g, '_')}`);
+//   }
+  
+//   // Cleanup
+//   try {
+//     await global.logOut();
+//   } catch (error) {
+//     console.warn('Logout cleanup failed:', error.message);
+//   }
+//     },
+
+    //  *
+    //  * Runs after a Cucumber Feature.
+    //  * @param {string}                   uri      path to feature file
+    //  * @param {GherkinDocument.IFeature} feature  Cucumber feature object
+    //  */
     // afterFeature: function (uri, feature) {
     // },
 
