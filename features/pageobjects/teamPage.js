@@ -16,6 +16,7 @@ export let configuredMembersApi;
 export let notConfiguredMembersApi;
 export let administratorsMembersApi;
 export let undeliverableMembersApi;
+export let subscriptionTypeApi;
 
 export default class teamPage {
   async getTeamMembers() {
@@ -129,7 +130,7 @@ export default class teamPage {
     console.log("TeamID from API: " + teamIdApi);
   }
 
-  async getAllSeatsApi() {
+  async getAllSeatsApiAndSubscriptionId() {
     // this.getSubscriptionsIdAndTeamId()
     await browser.waitUntil(
       async () => {
@@ -157,7 +158,9 @@ export default class teamPage {
 
     const response = userApiRequest.response;
     allSeatsApi = response.body.seats;
+    subscriptionTypeApi = response.body.product_handle;
     console.log("All seats from API:", allSeatsApi);
+    console.log("Subscription type from API:", subscriptionTypeApi);
   }
 
   async getAvailableSeatsApi() {
@@ -231,5 +234,10 @@ export default class teamPage {
     console.log("Not configured members from API:", notConfiguredMembersApi);
     console.log("Administrator members from API:", administratorsMembersApi);
     console.log("Undeliverable invitations from API:", undeliverableMembersApi);
+  }
+
+  async getSeatsTotalFromInput() {
+    const seatsTotal = await teamS.SEAT_TOTAL_INPUT.getValue();
+    return seatsTotal
   }
 }

@@ -276,7 +276,6 @@ export const config = {
      * @param {GherkinDocument.IFeature} feature  Cucumber feature object
      */
     beforeFeature: async function (uri, feature) {
-
         let loginS = new LoginPageSelectors()
         let global = new Global()
         console.log("Starting feature: ", feature.name)
@@ -301,6 +300,10 @@ export const config = {
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             await browser.saveScreenshot(`./screenshots/failed_${world.pickle.name}_${timestamp}.png`);
         }
+
+        After(async () => {
+            await browser.reloadSession();
+        });
     },
 
     // afterTest: async function (test, context, { error, result, duration, passed, retries }) {
@@ -339,7 +342,7 @@ export const config = {
      */
     // afterStep: function (step, scenario, result, context) {
     // },
-    
+
     //  *
     //  * Runs after a Cucumber Scenario.
     //  * @param {ITestCaseHookParameter} world            world object containing information on pickle and test step
@@ -348,19 +351,19 @@ export const config = {
     //  * @param {string}                 result.error     error stack if scenario failed
     //  * @param {number}                 result.duration  duration of scenario in milliseconds
     //  * @param {object}                 context          Cucumber World object
-    
-//     afterScenario: async function (world, result, context) {
-//         if (!result.passed) {
-//     await global.takeScreenshot(`failed_${world.pickle.name.replace(/[^a-zA-Z0-9]/g, '_')}`);
-//   }
-  
-//   // Cleanup
-//   try {
-//     await global.logOut();
-//   } catch (error) {
-//     console.warn('Logout cleanup failed:', error.message);
-//   }
-//     },
+
+    //     afterScenario: async function (world, result, context) {
+    //         if (!result.passed) {
+    //     await global.takeScreenshot(`failed_${world.pickle.name.replace(/[^a-zA-Z0-9]/g, '_')}`);
+    //   }
+
+    //   // Cleanup
+    //   try {
+    //     await global.logOut();
+    //   } catch (error) {
+    //     console.warn('Logout cleanup failed:', error.message);
+    //   }
+    //     },
 
     //  *
     //  * Runs after a Cucumber Feature.

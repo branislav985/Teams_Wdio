@@ -1,0 +1,8 @@
+ACCOUNTS: 
+    autoteam@mailinator.com - main admin
+    autoteammonthly@mailinator.com - monthly subscription, member for invite
+
+RUN COMANDS:
+    only one scenario: npm run test -- --cucumberOpts.name="Invite a new team member and check the logic"
+    only one feature file: npm run test -- --spec=features/team_page.feature
+    all tests: npm run test

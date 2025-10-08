@@ -90,7 +90,7 @@ export default class Global {
 
   async makeRequest(method, url, data) {
     const token = await this.getToken();
-
+    const cookies = await browser.getCookies('CP_3ae49351d5f78dd6a0985c4ddf144764');
     try {
       const response = await axios({
         method,
@@ -98,7 +98,8 @@ export default class Global {
         data,
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'cookie': 'CP_3ae49351d5f78dd6a0985c4ddf144764=' + cookies[0].value
         },
         timeout: 10000
       });
@@ -147,4 +148,5 @@ export default class Global {
     await browser.saveScreenshot(`./screenshots/${name}_${timestamp}.png`);
     console.log(`📸 Screenshot saved: ${name}_${timestamp}.png`);
   }
+
 }
