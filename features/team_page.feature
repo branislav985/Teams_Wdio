@@ -65,6 +65,29 @@ Feature: Team page - all functionalities
     And I click on Add Member button
     Then Confirm seccess toast message <message> is displayed
     And Added user with <email> is in the Team Members list
+    Then Confirm invited members increase by 1
+    Then Confirm team members increase by 1s
+    Then Confirm available seats decrease by 1
+    Then Confirm not configured for voice increased by 1
+    And Confirm inactive members did not change
+    And Confirm active members did not change
+    And Confirm suspended members did not change
+    And Confirm configured for voice did not change
+    And Confirm administrators members did not change
+    And Confirm undeliverable invitations did not change
+    Then I click on Remove team member button for <email> added member
+    # And Click on Confirm button
+    # Then Confirm invited members decrease by 1
+    # Then Confirm team members decrease by 1
+    # Then Confirm available seats increase by 1
+    # Then Confirm not configured for voice decrease by 1
+    # And Confirm inactive members did not change
+    # And Confirm active members did not change
+    # And Confirm suspended members did not change
+    # And Confirm configured for voice did not change
+    # And Confirm administrators members did not change
+    # And Confirm undeliverable invitations did not change
+
 
      Examples:
       | email                          | message                                    |

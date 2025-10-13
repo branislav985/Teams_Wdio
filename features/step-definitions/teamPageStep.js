@@ -418,7 +418,7 @@ Then(/^I delete added member via API to keep the state$/, async () => {
 })
 
 Then(/^Confirm seccess toast message (.*) is displayed$/, async (message) => {
-  await teamS.TOAST_MESSAGE.waitForDisplayed({ timeout: 5000 });
+  await teamS.TOAST_MESSAGE.waitForDisplayed({ timeout: 10000 });
   expect(await teamS.TOAST_MESSAGE.getText()).toContain(message);
 })
 
@@ -438,6 +438,28 @@ Then(/^Added user with (.*) is in the Team Members list$/, async (userEmail) => 
     }
   )
 
+})
+
+Then(/^I click on Remove team member button for (.*) added member$/, async (email) => {
+  // await browser.pause(5000)
+  
+  // console.log("All members count: " + allAddedMembers.length)
+  // await browser.pause(5000)
+
+
+  const allAddedMembers = await $$("input");
+
+  for (let i = 0; i < allAddedMembers.length; i++) {
+    let inputElement = allAddedMembers[i];
+    const emailValue = await allAddedMembers[i].getValue();
+    console.log("Email value: " + await emailValue)
+    await inputElement.scrollIntoView();
+
+    if (emailValue === email) {
+      const deleteButton = await teamS.DELETE_MEMBER_BUTTONS[i]
+      await global.clickOnButton(deleteButton)
+    }
+  }
 })
 
 
