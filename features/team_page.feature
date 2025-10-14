@@ -87,11 +87,9 @@ Feature: Team page - all functionalities
     And Confirm administrators members did not change
     And Confirm undeliverable invitations did not change
 
-
-     Examples:
+    Examples:
       | email                          | message                                    |
       | autoteammonthly@mailinator.com | has been successfully invited to your team |
-
 # Scenario: Invited member accepts invitation
 # Scenario: Delete invited member after acceptance
 # Scenario: Remove a team member and check the logic

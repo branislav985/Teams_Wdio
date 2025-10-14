@@ -307,28 +307,9 @@ export const config = {
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             await browser.saveScreenshot(`./screenshots/failed_${world.pickle.name}_${timestamp}.png`);
         }
-
-
-
-    //     After(async () => {
-    // // Reload samo kad je stvarno potrebno
-    // if (scenario.failed || scenario.tags.includes('@clean')) {
-    //     await browser.reloadSession();
-    // } else {
-    //     // Inače samo logout
-    //     await global.logOut();
-    // }
-// });
-
-        // await browser.setupInterceptor();
-        // const isActive = await browser.execute(() => window.__webdriverajax !== undefined);
-        // if (!isActive) {
-        //     console.warn("Interceptor deaktiviran, postavljam ponovo...");
-
-        // }
     },
 
-        beforeScenario: async function() {
+    beforeScenario: async function () {
         await browser.setupInterceptor();
     }
 
