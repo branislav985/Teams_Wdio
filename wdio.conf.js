@@ -278,7 +278,10 @@ export const config = {
     beforeFeature: async function (uri, feature) {
         let loginS = new LoginPageSelectors()
         let global = new Global()
+        let teamP = new (await import('./features/pageobjects/teamPage.js')).default()
         console.log("Starting feature: ", feature.name)
+
+
         if (!feature.name.includes("login page - all functionalities")) {
             await global.open('login')
             await expect(loginS.TITLE).toHaveText('Login to Bria Teams')
@@ -286,6 +289,10 @@ export const config = {
             await global.populateInputField(loginS.PASSWORD_INPUT, credentials.PASSWORD_ADMIN)
             await browser.setupInterceptor()
             await global.clickOnButton(loginS.LOGIN_BUTTON)
+            await teamP.getSubscriptionsIdAndTeamId();
+            await teamP.getAllSeatsApiAndSubscriptionId();
+            await teamP.getAvailableSeatsApi();
+            await teamP.getTeamDataApi();
 
         };
     },
@@ -301,10 +308,29 @@ export const config = {
             await browser.saveScreenshot(`./screenshots/failed_${world.pickle.name}_${timestamp}.png`);
         }
 
-        After(async () => {
-            await browser.reloadSession();
-        });
+
+
+    //     After(async () => {
+    // // Reload samo kad je stvarno potrebno
+    // if (scenario.failed || scenario.tags.includes('@clean')) {
+    //     await browser.reloadSession();
+    // } else {
+    //     // Inače samo logout
+    //     await global.logOut();
+    // }
+// });
+
+        // await browser.setupInterceptor();
+        // const isActive = await browser.execute(() => window.__webdriverajax !== undefined);
+        // if (!isActive) {
+        //     console.warn("Interceptor deaktiviran, postavljam ponovo...");
+
+        // }
     },
+
+        beforeScenario: async function() {
+        await browser.setupInterceptor();
+    }
 
     // afterTest: async function (test, context, { error, result, duration, passed, retries }) {
     //     if (!passed) {

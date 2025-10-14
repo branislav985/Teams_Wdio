@@ -8,7 +8,7 @@ import {
 } from "@wdio/cucumber-framework";
 import Global from "../pageobjects/globalPage.js";
 import TeamPageSelectors from "../elements/teamPageEl.js";
-import teamPage, {
+import TeamPage, {
   administratorsMembersApi,
   allSeatsApi,
   availableSeatsApi,
@@ -24,9 +24,10 @@ import { teamMembersAPI } from "../pageobjects/teamPage.js";
 
 const global = new Global();
 const teamS = new TeamPageSelectors();
-const teamP = new teamPage();
+const teamP = new TeamPage();
 let availableSeatsBeforeIncrease;
-let randomSeatsForIncreaseDecrease
+// let randomSeatsForIncreaseDecrease
+const randomSeatsForIncreaseDecrease = Math.floor(Math.random() * 10) + 1;
 let teamMembersBeforeInvite;
 let activeMembersBeforeInvite
 let invitedMembersBeforeInvite;
@@ -40,6 +41,7 @@ let memberId
 // let totalSeatsBeforeIncreaseApi
 
 Given(/^Provide team data from API$/, async () => {
+
   await teamP.getSubscriptionsIdAndTeamId();
   await teamP.getAllSeatsApiAndSubscriptionId();
   await teamP.getAvailableSeatsApi();
@@ -47,7 +49,9 @@ Given(/^Provide team data from API$/, async () => {
 });
 
 When(/^I click on Team label$/, async () => {
+  // await browser.setupInterceptor()
   await global.clickOnButton(teamS.TEAM_LABEL);
+
 });
 
 When(/^I check Team page elements and url (.*)$/, async (url) => {
@@ -58,6 +62,8 @@ When(/^I check Team page elements and url (.*)$/, async (url) => {
 
 Then(/^Confirm team members is equal to data from API$/, async () => {
   //There is waitUntill because it requires some time for data to be loaded
+
+  console.log("Team members from API: " + teamMembersAPI);
   await browser.waitUntil(async () => {
     let eltext = await teamP.getTeamMembers();
     await expect(eltext).toEqual(teamMembersAPI);
@@ -140,7 +146,7 @@ When(/^I click on add seats button$/, async () => {
 })
 
 Then(/^increase total number of seats by random number between 1 and 10$/, async () => {
-  randomSeatsForIncreaseDecrease = Math.floor(Math.random() * 10) + 1;
+
   const increasedSeats = parseInt(await teamP.getSeatsTotalFromInput()) + randomSeatsForIncreaseDecrease;
   await global.populateInputField(await teamS.SEAT_TOTAL_INPUT, increasedSeats);
 })
@@ -208,6 +214,7 @@ When(/^I enter (.*) email in email input field$/, async (email) => {
 })
 
 When(/^I click on Add Member button$/, async () => {
+  // await browser.setupInterceptor()
   await global.clickOnButton(teamS.ADD_MEMBER_BUTTON)
 })
 
@@ -270,7 +277,7 @@ Then(/^Confirm available seats decrease by 1$/, async () => {
   await browser.waitUntil(
     async () => {
       let availableSeats = await teamP.getAvailableSeats();
-      await expect(availableSeats).toEqual(availableSeatsApi - 1);
+      await expect(availableSeats).toEqual(availableSeatsBeforeIncrease - 1);
       return true;
     },
     {
@@ -340,6 +347,7 @@ Then(/^Confirm suspended members did not change$/, async () => {
     }
   )
 })
+
 Then(/^Confirm configured for voice did not change$/, async () => {
   await browser.waitUntil(
     async () => {
@@ -354,6 +362,7 @@ Then(/^Confirm configured for voice did not change$/, async () => {
     }
   )
 })
+
 Then(/^Confirm administrators members did not change$/, async () => {
   await browser.waitUntil(
     async () => {
@@ -368,6 +377,7 @@ Then(/^Confirm administrators members did not change$/, async () => {
     }
   )
 })
+
 Then(/^Confirm undeliverable invitations did not change$/, async () => {
   await browser.waitUntil(
     async () => {
@@ -384,37 +394,31 @@ Then(/^Confirm undeliverable invitations did not change$/, async () => {
 })
 
 Then(/^I store added member's data from API$/, async () => {
-  await browser.waitUntil(
+  console.log("Team ID from API: " + teamIdApi);
+
+  // Samo jedan poziv getRequests() u celom step-u
+  const request = await browser.waitUntil(
     async () => {
-      const requests = await browser.getRequests();
-      return requests.some(
-        (request) =>
-          request.url ===
-          "https://teams.qa.softphone.com/api/v2/team/" + teamIdApi + "/member" && request.response,
+      const requests = await browser.getRequests({ includePending: false });
+      return requests.find(
+        (req) =>
+          req.url === `https://teams.qa.softphone.com/api/v2/team/${teamIdApi}/member` &&
+          req.response
       );
     },
     {
       timeout: 10000,
-      timeoutMsg: "The API has not fount for 10 sec",
-    },
+      timeoutMsg: "The API has not been found for 10 sec",
+    }
   );
 
-  const requests = await browser.getRequests();
-  const userApiRequest = requests.find(
-    (request) =>
-      request.url ===
-      "https://teams.qa.softphone.com/api/v2/team/" + teamIdApi + "/member",
-  );
-
-  const response = userApiRequest.response;
-  memberId = response.body.members[0].id;
+  memberId = request.response.body.members[0].id;
   console.log("Added member ID from API:", memberId);
 })
 
 Then(/^I delete added member via API to keep the state$/, async () => {
-
-  // console.log("Cookie after set: ", await browser.getCookies([CP_3ae49351d5f78dd6a0985c4ddf144764]));
   await global.makeRequest("DELETE", "https://teams.qa.softphone.com/api/v2/team/" + teamIdApi + "/member/" + memberId + "/?admin=false&status=invited");
+  await browser.refresh()
 })
 
 Then(/^Confirm seccess toast message (.*) is displayed$/, async (message) => {
@@ -424,6 +428,7 @@ Then(/^Confirm seccess toast message (.*) is displayed$/, async (message) => {
 
 Then(/^Added user with (.*) is in the Team Members list$/, async (userEmail) => {
   // await browser.refresh()
+
   await browser.waitUntil(
     async () => {
       const allMembers = await teamS.ALL_MEMBERS_EMAILS
@@ -442,7 +447,7 @@ Then(/^Added user with (.*) is in the Team Members list$/, async (userEmail) => 
 
 Then(/^I click on Remove team member button for (.*) added member$/, async (email) => {
   // await browser.pause(5000)
-  
+
   // console.log("All members count: " + allAddedMembers.length)
   // await browser.pause(5000)
 
@@ -462,5 +467,71 @@ Then(/^I click on Remove team member button for (.*) added member$/, async (emai
   }
 })
 
+Then(/^Click on Confirm button$/, async () => {
+  await global.clickOnButton(teamS.CONFIRM_REMOVE_MEMBER_BUTTON)
+})
 
+Then(/^Confirm invited members decrease by 1$/, async () => {
+  await browser.waitUntil(
+    async () => {
+      let invitedMembers = await teamP.getInvitedMembers();
+      await expect(invitedMembers).toEqual(invitedMembersBeforeInvite);
+      return true;
+    },
+    {
+      timeout: 5000,
+      timeoutMsg: "data is not loaded after 10sec",
+      interval: 300
+    }
+  )
+})
+Then(/^Confirm team members decrease by 1$/, async () => {
+  await browser.waitUntil(
+    async () => {
+      let teamMembers = await teamP.getTeamMembers();
+      await expect(teamMembers).toEqual(teamMembersBeforeInvite);
+      return true;
+    },
+    {
+      timeout: 5000,
+      timeoutMsg: "data is not loaded after 10sec",
+      interval: 300
+    }
+  )
+})
+
+Then(/^Confirm available seats increase by 1$/, async () => {
+  await browser.waitUntil(
+    async () => {
+      let availableSeats = await teamP.getAvailableSeats();
+      await expect(availableSeats).toEqual(availableSeatsBeforeIncrease);
+      return true;
+    },
+    {
+      timeout: 5000,
+      timeoutMsg: "data is not loaded after 10sec",
+      interval: 300
+    }
+  )
+})
+
+Then(/^Confirm not configured for voice decrease by 1$/, async () => {
+  await browser.waitUntil(
+    async () => {
+      let notConfiguredForVoice = await teamP.getNotConfiguredForVoice();
+      await expect(notConfiguredForVoice).toEqual(notConfiguredMembersBeforeInvite);
+      return true;
+    },
+    {
+      timeout: 5000,
+      timeoutMsg: "data is not loaded after 10sec",
+      interval: 300
+    }
+  )
+})
+
+// When(/^I click on Team label_delete$/, async() => {
+// await browser.setupInterceptor()
+//   await global.clickOnButton(teamS.TEAM_LABEL);
+// })
 

@@ -6,3 +6,85 @@ RUN COMANDS:
     only one scenario: npm run test -- --cucumberOpts.name="Invite a new team member and check the logic"
     only one feature file: npm run test -- --spec=features/team_page.feature
     all tests: npm run test
+
+
+
+RESENJE ZA LOGIN:
+📊 Analiza: Zašto NE raditi login pre svakog scenarija
+❌ Problemi sa login pre svakog scenarija:
+
+Performanse:
+
+Login može trajati 2-5 sekundi
+100 scenarija = 5-8 minuta samo na login!
+
+
+Server opterećenje:
+
+Nepotrebno opterećuješ auth server
+Možeš triggerovati rate limiting
+
+
+Test flakiness:
+
+Više login pokušaja = veća šansa za greške
+Network problemi utiču na sve testove
+
+
+Logs zagađenje:
+
+Hiljade istih login requestova u logovima
+Teže je naći prave probleme
+
+
+
+✅ Najbolje prakse:
+1. Login jednom po Feature (Trenutno koristiš)
+javascript// Dobro za početak, ali može bolje
+beforeFeature: async function() {
+    if (!feature.name.includes("login")) {
+        await performLogin();
+    }
+}
+Pros: Jednostavno, radi OK
+Cons: Još uvek previše logina
+2. Session/Cookie Reuse (Preporučujem)
+javascript// Login jednom, koristi session za sve testove
+beforeSession: async function() {
+    await SessionManager.loginOnce();
+}
+
+beforeScenario: async function() {
+    await SessionManager.restoreSession();
+}
+Pros: Brzo, efikasno
+Cons: Treba paziti na session timeout
+3. API Authentication (Najbolje za brzinu)
+javascript// Zaobiđi UI potpuno
+beforeScenario: async function() {
+    await ApiAuth.setupAuthenticatedSession();
+    await browser.url('/dashboard'); // Direktno na stranicu
+}
+Pros: Najbrže moguće
+Cons: Ne testira login UI
+🎯 Moja preporuka za tvoj projekat:
+javascript// Kombinovani pristup - najbolje od svih svetova
+class AuthStrategy {
+    static async setupAuth(scenario) {
+        // 1. Login tests - bez auth
+        if (scenario.tags.includes('@login')) return;
+        
+        // 2. Smoke tests - fresh login
+        if (scenario.tags.includes('@smoke')) {
+            await this.freshLogin();
+            return;
+        }
+        
+        // 3. Svi ostali - reuse session
+        await this.reuseOrLogin();
+    }
+}
+📈 Rezultati optimizacije:
+Pristup100 ScenarijaVremeStabilnostLogin svaki put100 logina+8 min⭐⭐Login po feature~10 logina+30 sec⭐⭐⭐Session reuse1 login+3 sec⭐⭐⭐⭐API auth0 UI logina+0 sec⭐⭐⭐⭐⭐
+💡 Zaključak:
+Počni sa Session Reuse pristupom - najbolji balans brzine i pouzdanosti. Kasnije možeš dodati API auth za još veću brzinu!

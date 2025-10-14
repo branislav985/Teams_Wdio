@@ -22,6 +22,7 @@ export default class TeamPageSelectors {
   ALL_MEMBERS_EMAILS = $$("input[data-profile-input='member.email']");
   TOAST_MESSAGE = $("div[class='noty_body']")
   DELETE_MEMBER_BUTTONS = $$("//input/./../../../../following-sibling::div[2]//button[@title='Remove Member from Team']");
+  CONFIRM_REMOVE_MEMBER_BUTTON = $("button[data-testid='memberRemoveCancelButtonConfirm']")
   
 
 }

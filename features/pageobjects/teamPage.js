@@ -18,18 +18,25 @@ export let administratorsMembersApi;
 export let undeliverableMembersApi;
 export let subscriptionTypeApi;
 
-export default class teamPage {
+export default class TeamPage {
   async getTeamMembers() {
+    
     const teamMembersNum = (await teamS.TEAM_DATA[0].getText()).split("\n")[0];
     // console.log(teamMembersNum)
     return parseInt(teamMembersNum);
   }
 
   async getAvailableSeats() {
+    console.log(("PRE Awaiting for available seats to be different than 0" + "\n" + await teamS.TEAM_DATA[1].getText()).split("\n",)[0]);
+    await browser.waitUntil(
+      async () => 
+        ((await teamS.TEAM_DATA[1].getText()).split("\n",)[0]) !== 0
+      
+    )
+console.log(("POSLE Awaiting for available seats to be different than 0" + "\n" + await teamS.TEAM_DATA[1].getText()).split("\n",)[0]);
     const availableSeatsNum = (await teamS.TEAM_DATA[1].getText()).split(
       "\n",
     )[0];
-    // console.log(vailableSeatsNum)
     return parseInt(availableSeatsNum);
   }
 
@@ -98,106 +105,78 @@ export default class teamPage {
   }
 
   async getSubscriptionsIdAndTeamId() {
-    await browser.waitUntil(
+    // Uhvati return vrednost!
+    const request = await browser.waitUntil(
       async () => {
-        const requests = await browser.getRequests();
-        return (
-          Array.isArray(requests) &&
-          requests.some(
-            (request) =>
-              request.url &&
-              request.url.includes("/api/v2/authUser") &&
-              request.response,
-          )
+        const requests = await browser.getRequests({ includePending: false });
+        return requests.find(
+          (req) => req.url.includes("api/v2/authUser") && req.response
         );
       },
-      {
-        timeout: 10000,
-        timeoutMsg: "API poziv se nije završio u roku od 10 sekundi",
-      },
+      { timeout: 10000 }
     );
 
-    const requests = await browser.getRequests();
-    const userApiRequest = requests.find((request) =>
-      request.url.includes("https://teams.qa.softphone.com/api/v2/authUser"),
-    );
-
-    const response = userApiRequest.response;
-    subscriptionsIdApi = response.body.subscriptions[0];
-    teamIdApi = response.body.team.id;
-
-    console.log("SubscritionsId from API: ", subscriptionsIdApi);
-    console.log("TeamID from API: " + teamIdApi);
+    // Sada request postoji
+    subscriptionsIdApi = request.response.body.subscriptions[0];
+    teamIdApi = request.response.body.team.id;
   }
 
   async getAllSeatsApiAndSubscriptionId() {
     // this.getSubscriptionsIdAndTeamId()
-    await browser.waitUntil(
+    const request = await browser.waitUntil(
       async () => {
         const requests = await browser.getRequests();
-        return requests.some(
-          (request) =>
-            request.url ===
-              "https://teams.qa.softphone.com/api/v2/subscription/" +
-                subscriptionsIdApi && request.response,
+        return requests.find(
+          (req) =>
+            req.url ===
+            "https://teams.qa.softphone.com/api/v2/subscription/" +
+            subscriptionsIdApi && req.response,
         );
       },
       {
         timeout: 10000,
-        timeoutMsg: "getSubscriptionsIdAndTeamId API has not fount for 10 sec",
+        timeoutMsg: "getSubscriptionsIdAndTeamId API has not found for 10 sec",
       },
     );
 
-    const requests = await browser.getRequests();
-    const userApiRequest = requests.find(
-      (request) =>
-        request.url ===
-        "https://teams.qa.softphone.com/api/v2/subscription/" +
-          subscriptionsIdApi,
-    );
-
-    const response = userApiRequest.response;
-    allSeatsApi = response.body.seats;
-    subscriptionTypeApi = response.body.product_handle;
+    allSeatsApi = request.response.body.seats;
+    subscriptionTypeApi = request.response.body.product_handle;
     console.log("All seats from API:", allSeatsApi);
     console.log("Subscription type from API:", subscriptionTypeApi);
   }
 
   async getAvailableSeatsApi() {
+    if (!teamIdApi) {
+      await this.getSubscriptionsIdAndTeamId();
+    }
     // this.getSubscriptionsIdAndTeamId()
-    await browser.waitUntil(
+    const request = await browser.waitUntil(
       async () => {
         const requests = await browser.getRequests();
-        return requests.some(
-          (request) => request.url.includes("/seats") && request.response,
+        return requests.find(
+          (req) => req.url.includes("/seats") && req.response,
         );
       },
       {
         timeout: 10000,
-        timeoutMsg: "getAvailableSeatsApi API has not fount for 10 sec",
+        timeoutMsg: `Team API (ID: ${teamIdApi}) has not been found for 10 sec`
       },
     );
 
-    const requests = await browser.getRequests();
-    const userApiRequest = requests.find((request) =>
-      request.url.includes("/seats"),
-    );
-
-    const response = userApiRequest.response;
-    availableSeatsApi = response.body.available_seats;
+    availableSeatsApi = request.response.body.available_seats;
     console.log("Available seats from API:", availableSeatsApi);
   }
 
   async getTeamDataApi() {
     // this.getSubscriptionsIdAndTeamId()
-    await browser.waitUntil(
+    const request = await browser.waitUntil(
       async () => {
-        const requests = await browser.getRequests();
-        return requests.some(
-          (request) =>
-            request.url ===
-              "https://teams.qa.softphone.com/api/v2/team/" + teamIdApi &&
-            request.response,
+        const requests = await browser.getRequests({ includePending: false });
+        return requests.find(
+          (req) =>
+            req.url ===
+            "https://teams.qa.softphone.com/api/v2/team/" + teamIdApi &&
+            req.response,
         );
       },
       {
@@ -206,24 +185,15 @@ export default class teamPage {
       },
     );
 
-    const requests = await browser.getRequests();
-    const userApiRequest = requests.find(
-      (request) =>
-        request.url ===
-        "https://teams.qa.softphone.com/api/v2/team/" + teamIdApi,
-    );
-
-    const response = userApiRequest.response;
-
-    teamMembersAPI = response.body.team_size;
-    invitedMembersApi = response.body.invited_members;
-    inactiveMembersApi = response.body.inactive_members;
-    activeMembersApi = response.body.active_members;
-    suspendedMembersApi = response.body.suspended_members;
-    configuredMembersApi = response.body.configured_for_voice;
-    notConfiguredMembersApi = response.body.unconfigured_for_voice;
-    administratorsMembersApi = response.body.admin_members;
-    undeliverableMembersApi = response.body.undeliverable_email_members;
+    teamMembersAPI = request.response.body.team_size;
+    invitedMembersApi = request.response.body.invited_members;
+    inactiveMembersApi = request.response.body.inactive_members;
+    activeMembersApi = request.response.body.active_members;
+    suspendedMembersApi = request.response.body.suspended_members;
+    configuredMembersApi = request.response.body.configured_for_voice;
+    notConfiguredMembersApi = request.response.body.unconfigured_for_voice;
+    administratorsMembersApi = request.response.body.admin_members;
+    undeliverableMembersApi = request.response.body.undeliverable_email_members;
 
     console.log("Team members from API:", teamMembersAPI);
     console.log("Invited members from API:", invitedMembersApi);

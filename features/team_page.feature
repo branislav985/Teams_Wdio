@@ -5,7 +5,6 @@ Feature: Team page - all functionalities
   So that I can monitor team members and their status
 
   Background:
-    Given Provide team data from API
     When I click on Team label
     And I check Team page elements and url https://teams.qa.softphone.com/dashboard/team
 
@@ -76,17 +75,17 @@ Feature: Team page - all functionalities
     And Confirm administrators members did not change
     And Confirm undeliverable invitations did not change
     Then I click on Remove team member button for <email> added member
-    # And Click on Confirm button
-    # Then Confirm invited members decrease by 1
-    # Then Confirm team members decrease by 1
-    # Then Confirm available seats increase by 1
-    # Then Confirm not configured for voice decrease by 1
-    # And Confirm inactive members did not change
-    # And Confirm active members did not change
-    # And Confirm suspended members did not change
-    # And Confirm configured for voice did not change
-    # And Confirm administrators members did not change
-    # And Confirm undeliverable invitations did not change
+    And Click on Confirm button
+    Then Confirm invited members decrease by 1
+    Then Confirm team members decrease by 1
+    Then Confirm available seats increase by 1
+    Then Confirm not configured for voice decrease by 1
+    And Confirm inactive members did not change
+    And Confirm active members did not change
+    And Confirm suspended members did not change
+    And Confirm configured for voice did not change
+    And Confirm administrators members did not change
+    And Confirm undeliverable invitations did not change
 
 
      Examples:
