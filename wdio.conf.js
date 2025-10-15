@@ -1,5 +1,6 @@
 import LoginPageSelectors from "./features/elements/loginEl.js";
 import Global from "./features/pageobjects/globalPage.js";
+import { SessionManager } from './features/helpers/sessionManager.js';
 
 // const global = new Global();
 
@@ -293,8 +294,15 @@ export const config = {
             await teamP.getAllSeatsApiAndSubscriptionId();
             await teamP.getAvailableSeatsApi();
             await teamP.getTeamDataApi();
-
         };
+    },
+
+    beforeSession: async function() {
+        await SessionManager.loginOnce();
+    },
+
+    beforeScenario: async function() {
+        await SessionManager.restoreSession();
     },
 
     afterScenario: async function (world, result, context) {

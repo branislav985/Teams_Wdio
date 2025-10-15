@@ -1,28 +1,110 @@
 export default class TeamPageSelectors {
-  TEAM_LABEL = $("#nav-team");
-  TEAM_MEMBERS_TITLE = $("div[class=col-12]:first-child>div>div>h2");
-  ADMINISTRATOR_ACCESS_TITLE = $("div[class=col-12]:last-child>div>div>h2");
-  TEAM_DATA = $$("div[data-v-51518359]");
+  // TEAM_LABEL = $("#nav-team");
+  // TEAM_MEMBERS_TITLE = $("div[class=col-12]:first-child>div>div>h2");
+  // ADMINISTRATOR_ACCESS_TITLE = $("div[class=col-12]:last-child>div>div>h2");
+  // TEAM_DATA = $$("div[data-v-51518359]");
 
-  // Manage subscription
-    //Seats and subscription elements
-  ADD_SEATS_BUTTON = $("button[data-testid='addRemoveSeats']");
-  APPLAY_CHANGES_BUTTON = $("button[title='Apply Changes']")
-  CACNEL_SUBSCRIPTION_BUTTON = $("button[data-testid='manageSubscriptionCloseButton']");
-  SEAT_TOTAL_INPUT = $("input[name='updated_seat_count']");
-  SEATS_NUMBER_CHANGE = $("span[data-subscription-text='seat_difference']:nth-child(1)");
-  SEATS_ADDED_REMOVED = $("span[data-subscription-text='seat_difference']:nth-child(2)");
-  PRICE_PER_SEAT = $("div[data-testid='changesToSubscription']>div:nth-child(2)>span>span");
-  TOTAL_PRICE = $("div[data-testid='changesToSubscription']>div:nth-child(3)>span:nth-child(1)>span:nth-child(1)");
-  TOTAL_PRICE_OLD = $("div[data-testid='changesToSubscription']>div:nth-child(3)>span:nth-child(2)>span:nth-child(1)")
-    //Team members elements
-  INVITE_TEAM_MEMBER_BUTTON = $("button[title='Invite Members']")
-  EMAIL_INPUT = $("input[name='email-0']");
-  ADD_MEMBER_BUTTON= $('button[data-testid="saveButtonContactAdd"]')
-  ALL_MEMBERS_EMAILS = $$("input[data-profile-input='member.email']");
-  TOAST_MESSAGE = $("div[class='noty_body']")
-  DELETE_MEMBER_BUTTONS = $$("//input/./../../../../following-sibling::div[2]//button[@title='Remove Member from Team']");
-  CONFIRM_REMOVE_MEMBER_BUTTON = $("button[data-testid='memberRemoveCancelButtonConfirm']")
-  
+  // // Manage subscription
+  // //Seats and subscription elements
+  // ADD_SEATS_BUTTON = $("button[data-testid='addRemoveSeats']");
+  // APPLAY_CHANGES_BUTTON = $("button[title='Apply Changes']")
+  // CACNEL_SUBSCRIPTION_BUTTON = $("button[data-testid='manageSubscriptionCloseButton']");
+  // SEAT_TOTAL_INPUT = $("input[name='updated_seat_count']");
+  // SEATS_NUMBER_CHANGE = $("span[data-subscription-text='seat_difference']:nth-child(1)");
+  // SEATS_ADDED_REMOVED = $("span[data-subscription-text='seat_difference']:nth-child(2)");
+  // PRICE_PER_SEAT = $("div[data-testid='changesToSubscription']>div:nth-child(2)>span>span");
+  // TOTAL_PRICE = $("div[data-testid='changesToSubscription']>div:nth-child(3)>span:nth-child(1)>span:nth-child(1)");
+  // TOTAL_PRICE_OLD = $("div[data-testid='changesToSubscription']>div:nth-child(3)>span:nth-child(2)>span:nth-child(1)")
+  // //Team members elements
+  // INVITE_TEAM_MEMBER_BUTTON = $("button[title='Invite Members']")
+  // EMAIL_INPUT = $("input[name='email-0']");
+  // ADD_MEMBER_BUTTON = $('button[data-testid="saveButtonContactAdd"]')
+  // ALL_MEMBERS_EMAILS = $$("input[data-profile-input='member.email']");
+  // TOAST_MESSAGE = $("div[class='noty_body']")
+  // DELETE_MEMBER_BUTTONS = $$("//input/./../../../../following-sibling::div[2]//button[@title='Remove Member from Team']");
+  // CONFIRM_REMOVE_MEMBER_BUTTON = $("button[data-testid='memberRemoveCancelButtonConfirm']")
+
+  // Team osnovni elementi
+  get TEAM_LABEL() {
+    return $("#nav-team");
+  }
+
+  get TEAM_MEMBERS_TITLE() {
+    return $("div[class=col-12]:first-child>div>div>h2");
+  }
+
+  get ADMINISTRATOR_ACCESS_TITLE() {
+    return $("div[class=col-12]:last-child>div>div>h2");
+  }
+
+  get TEAM_DATA() {
+    return $$("div[data-v-51518359]");
+  }
+
+  // Manage subscription - Seats and subscription elementi
+  get ADD_SEATS_BUTTON() {
+    return $("button[data-testid='addRemoveSeats']");
+  }
+
+  get APPLY_CHANGES_BUTTON() {
+    return $("button[title='Apply Changes']");
+  }
+
+  get CANCEL_SUBSCRIPTION_BUTTON() {
+    return $("button[data-testid='manageSubscriptionCloseButton']");
+  }
+
+  get SEAT_TOTAL_INPUT() {
+    return $("input[name='updated_seat_count']");
+  }
+
+  get SEATS_NUMBER_CHANGE() {
+    return $("span[data-subscription-text='seat_difference']:nth-child(1)");
+  }
+
+  get SEATS_ADDED_REMOVED() {
+    return $("span[data-subscription-text='seat_difference']:nth-child(2)");
+  }
+
+  get PRICE_PER_SEAT() {
+    return $("div[data-testid='changesToSubscription']>div:nth-child(2)>span>span");
+  }
+
+  get TOTAL_PRICE() {
+    return $("div[data-testid='changesToSubscription']>div:nth-child(3)>span:nth-child(1)>span:nth-child(1)");
+  }
+
+  get TOTAL_PRICE_OLD() {
+    return $("div[data-testid='changesToSubscription']>div:nth-child(3)>span:nth-child(2)>span:nth-child(1)");
+  }
+
+  // Team members elementi
+  get INVITE_TEAM_MEMBER_BUTTON() {
+    return $("button[title='Invite Members']");
+  }
+
+  get EMAIL_INPUT() {
+    return $("input[name='email-0']");
+  }
+
+  get ADD_MEMBER_BUTTON() {
+    return $('button[data-testid="saveButtonContactAdd"]');
+  }
+
+  get ALL_MEMBERS_EMAILS() {
+    return $$("input[data-profile-input='member.email']");
+  }
+
+  get TOAST_MESSAGE() {
+    return $("div[class='noty_body']");
+  }
+
+  get DELETE_MEMBER_BUTTONS() {
+    return $$("//input/./../../../../following-sibling::div[2]//button[@title='Remove Member from Team']");
+  }
+
+  get CONFIRM_REMOVE_MEMBER_BUTTON() {
+    return $("button[data-testid='memberRemoveCancelButtonConfirm']");
+  }
 
 }

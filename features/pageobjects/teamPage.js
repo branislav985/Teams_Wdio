@@ -27,13 +27,13 @@ export default class TeamPage {
   }
 
   async getAvailableSeats() {
-    console.log(("PRE Awaiting for available seats to be different than 0" + "\n" + await teamS.TEAM_DATA[1].getText()).split("\n",)[0]);
+    console.log(("PRE Awaiting for available seats to be different than 0" + ": " + await teamS.TEAM_DATA[1].getText()).split("\n",)[0]);
     await browser.waitUntil(
       async () => 
-        ((await teamS.TEAM_DATA[1].getText()).split("\n",)[0]) !== 0
+        (parseInt((await teamS.TEAM_DATA[1].getText()).split("\n",)[0])) > 0
       
     )
-console.log(("POSLE Awaiting for available seats to be different than 0" + "\n" + await teamS.TEAM_DATA[1].getText()).split("\n",)[0]);
+console.log(("POSLE Awaiting for available seats to be different than 0" + ": " + await teamS.TEAM_DATA[1].getText()).split("\n",)[0]);
     const availableSeatsNum = (await teamS.TEAM_DATA[1].getText()).split(
       "\n",
     )[0];

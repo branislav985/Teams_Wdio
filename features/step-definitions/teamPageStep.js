@@ -152,8 +152,8 @@ Then(/^increase total number of seats by random number between 1 and 10$/, async
 })
 
 Then(/^I click on Update subscription button$/, async () => {
-  await global.clickOnButton(await teamS.APPLAY_CHANGES_BUTTON);
-  await global.clickOnButton(await teamS.CACNEL_SUBSCRIPTION_BUTTON)
+  await global.clickOnButton(await teamS.APPLY_CHANGES_BUTTON);
+  await global.clickOnButton(await teamS.CANCEL_SUBSCRIPTION_BUTTON)
 })
 
 When(/^I get available seats before increase_decrease$/, async () => {
